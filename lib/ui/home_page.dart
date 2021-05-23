@@ -2,7 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-PAREI NA AULA 87 NO COMEÇO, CURSO DE DANIEL CIOLFFI UDEMY
+import 'package:share/share.dart';
+import 'package:transparent_image/transparent_image.dart';
+import 'gif_page.dart';
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -111,11 +114,25 @@ class _HomePageState extends State<HomePage> {
       itemBuilder: (context, index) {
         if (_search == null || index < snapshot.data["data"].length)
           return GestureDetector(
-            child: Image.network(
-              snapshot.data["data"][index]["images"]["fixed_height"]["url"],
+            child: FadeInImage.memoryNetwork(
+              placeholder: kTransparentImage,
+              image: snapshot.data["data"][index]["images"]["fixed_height"]
+                  ["url"],
               height: 300.0,
               fit: BoxFit.cover,
             ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => GifPage(snapshot.data["data"][index]),
+                ),
+              );
+            },
+            onLongPress: () {
+              Share.share(snapshot.data["data"][index]["images"]["fixed_height"]
+                  ["url"]);
+            },
           );
         else
           return Container(
